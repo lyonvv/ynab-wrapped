@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// src/App.tsx
+import React, { useEffect } from 'react';
+import { useAtom } from 'jotai';
+import { accessTokenAtom } from './state/auth';
+import { Login } from './components/Login';
+import { Main } from './components/Main';
+import queryString from 'query-string';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => {
+  const [accessToken, setAccessToken] = useAtom(accessTokenAtom);
+
+  useEffect(() => {
+    const parsedHash = queryString.parse(window.location.hash);
+
+    if (
+      parsedHash.access_token &&
+      typeof parsedHash.access_token === 'string'
+    ) {
+      setAccessToken(parsedHash.access_token);
+
+      window.location.hash = '';
+    }
+  }, [setAccessToken]);
+
+  return <div className="App">{!accessToken ? <Login /> : <Main />}</div>;
+};
 
 export default App;
