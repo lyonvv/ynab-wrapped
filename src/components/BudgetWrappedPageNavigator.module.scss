@@ -25,6 +25,12 @@
   border-radius: 50%;
   background-color: $green;
 
+  &:hover {
+    height: 0.75rem;
+    width: 0.75rem;
+    cursor: pointer;
+  }
+
   &.is-selected {
     background-color: $green-dark;
     height: 0.75rem;

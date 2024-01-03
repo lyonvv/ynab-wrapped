@@ -82,3 +82,8 @@ export const getStartingBalanceTransactionForAccount = (
       );
     });
 };
+
+export const calculateExpirationTime = (expiresInSeconds: number) => {
+  const currentTime = new Date().getTime();
+  return currentTime + expiresInSeconds * 1000;
+};

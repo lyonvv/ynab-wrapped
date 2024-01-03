@@ -1,12 +1,19 @@
+import { useSelectedYear } from '../state/appState';
+
 type StartPageProps = Readonly<{
-  year: number;
+  id: string;
+  pageSectionIndex: number;
 }>;
 
-export function StartPage({ year }: StartPageProps) {
+export function StartPage({ id, pageSectionIndex }: StartPageProps) {
+  const year = useSelectedYear();
+
   return (
-    <div>
+    <div id={id}>
       <div>{'Welcome to YNAB Wrapped!'}</div>
       <div>{`Let's take a look back at your YNAB journey in ${year}`}</div>
+      <div>{'Scroll down to get started'}</div>
+      <div>{`Page section index: ${pageSectionIndex}`}</div>
     </div>
   );
 }

@@ -19,6 +19,16 @@ export const payeeLocationsAtom = atom<ynab.PayeeLocation[]>([]);
 
 export const monthSummariesAtom = atom<ynab.MonthSummary[]>([]);
 
+export const fetchingYNABDataAtom = atom<boolean>(false);
+
+export const useFetchingYNABData = () => {
+  return useAtomValue(fetchingYNABDataAtom);
+};
+
+export const useCurrentBudgetId = () => {
+  return useAtomValue(currentBudgetIdAtom);
+};
+
 export const fetchBudgetSummaries = async (accessToken: string | null) => {
   if (!accessToken) return;
 

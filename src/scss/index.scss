@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@00;800&display=swap');
+
+@import './mixins.scss';
 
 body {
   margin: 0;
@@ -17,4 +19,14 @@ input,
 textarea,
 select {
   font-family: 'Merriweather Sans', sans-serif;
+}
+
+@include apply-color-scheme(default-theme);
+
+.page0 {
+  @include apply-color-scheme(default-theme);
+}
+
+.page1 {
+  @include apply-color-scheme(theme-1);
 }

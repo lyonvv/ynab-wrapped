@@ -1,0 +1,52 @@
+@import './_colorSchemes.scss';
+
+@mixin apply-color-scheme($scheme-name: 'default-scheme') {
+  $color-scheme: map-get($color-schemes, $scheme-name);
+
+  $primary-color: map-get($color-scheme, primary-color);
+  $secondary-color: map-get($color-scheme, secondary-color);
+  $accent-color: map-get($color-scheme, accent-color);
+  $background-color: map-get($color-scheme, background-color);
+  $text-color: map-get($color-scheme, text-color);
+
+  body {
+    background-color: $background-color;
+    color: $text-color;
+  }
+
+  a {
+    color: $accent-color;
+  }
+
+  .bg-normal {
+    background-color: $primary-color;
+  }
+
+  .bg-primary {
+    background-color: $primary-color;
+  }
+
+  .bg-secondary {
+    background-color: $secondary-color;
+  }
+
+  .bg-accent {
+    background-color: $accent-color;
+  }
+
+  .text-normal {
+    color: $text-color;
+  }
+
+  .text-primary {
+    color: $primary-color;
+  }
+
+  .text-secondary {
+    color: $secondary-color;
+  }
+
+  .text-accent {
+    color: $accent-color;
+  }
+}

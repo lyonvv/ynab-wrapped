@@ -1,21 +1,19 @@
 import { useAccountsMap, useTransactions } from '../../state/ynab';
 import { useMemo } from 'react';
 import * as ynab from 'ynab';
-import {
-  convertAndFormatYNABAmountToDollars,
-  getStartingBalanceTransactionForAccount,
-  getTransactionsBetweenDates,
-} from '../../utils/utils';
-import { NetChangesRow } from './NetChangesRow';
+import { getTransactionsBetweenDates } from '../../utils/utils';
 import { TotalNetChanges } from './TotalNetChanges';
+import { useSelectedYear } from '../../state/appState';
 
 type NetChangesProps = Readonly<{
-  year: number;
+  id: string;
+  pageSectionIndex: number;
 }>;
 
-export function NetChanges({ year }: NetChangesProps) {
+export function NetChanges({ id, pageSectionIndex }: NetChangesProps) {
   const transactions = useTransactions();
   const accountsMap = useAccountsMap();
+  const year = useSelectedYear();
 
   const transactionsUpToYear = useMemo(
     () =>
@@ -58,22 +56,6 @@ export function NetChanges({ year }: NetChangesProps) {
     [accountsMap, transactionsUpToYear]
   );
 
-  const accountsStartingBalanceTransactions = useMemo(
-    () =>
-      Object.keys(accountsMap).reduce((acc, accountId) => {
-        const startingBalanceTransaction =
-          getStartingBalanceTransactionForAccount(transactions, accountId);
-
-        if (startingBalanceTransaction) {
-          acc[accountId] = startingBalanceTransaction;
-        }
-
-        return acc;
-      }, {} as Record<string, ynab.TransactionDetail>),
-
-    [accountsMap, transactions]
-  );
-
   const accountsYearChange = useMemo(
     () => getAmountTotalsByAccount(transactionsInYear, accountsMap),
 
@@ -81,35 +63,13 @@ export function NetChanges({ year }: NetChangesProps) {
   );
 
   return (
-    <div>
+    <div id={id}>
       <div>Net Changes</div>
       <TotalNetChanges
         accountsBalanceAtStartOfYear={accountsBalanceAtStartOfYear}
         accountsYearChange={accountsYearChange}
       />
-
-      <div>
-        <div>
-          {
-            'Here are all of your accounts, and the changes they went through this year'
-          }
-        </div>
-        <div>
-          {Object.values(accountsMap).map((account) => (
-            <NetChangesRow
-              account={account}
-              year={year}
-              accountBalanceAtStartOfYear={
-                accountsBalanceAtStartOfYear[account.id]
-              }
-              accountStartingBalanceTransaction={
-                accountsStartingBalanceTransactions[account.id]
-              }
-              accountYearChange={accountsYearChange[account.id]}
-            />
-          ))}
-        </div>
-      </div>
+      <div> {'page section index: ' + pageSectionIndex} </div>
     </div>
   );
 }

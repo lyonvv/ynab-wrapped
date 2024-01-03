@@ -1,61 +1,55 @@
-import { useEffect, useState } from 'react';
-import {
-  currentBudgetIdAtom,
-  fetchAccounts,
-  fetchCategories,
-  fetchMonthSummaries,
-  fetchPayeeLocations,
-  fetchPayees,
-  fetchTransactions,
-} from '../state/ynab';
-import { useAtom } from 'jotai';
-import { accessTokenAtom } from '../state/auth';
+import { useFetchingYNABData } from '../state/ynab';
+import { useIsAuthenticated } from '../state/auth';
 import { StartPage } from './StartPage';
 import { NetChanges } from './NetChanges/NetChanges';
-import styles from './BudgetWrapped.module.scss';
 import { BudgetWrappedPageNavigator } from './BudgetWrappedPageNavigator';
-
-const TOTAL_PAGES = 2;
+import { handleLogin } from '../loginHelper';
+import { useFetchYNABData } from '../hooks/useFetchYNABData';
+import { useHandleScroll } from '../hooks/useHandleScroll';
+import { useSetAccessToken } from '../hooks/useSetAccessToken';
 
 export function BudgetWrapped() {
-  const [accessToken] = useAtom(accessTokenAtom);
-  const [selectedBudgetId] = useAtom(currentBudgetIdAtom);
+  useSetAccessToken();
+  useFetchYNABData();
 
-  const [loadingData, setLoadingData] = useState(false);
+  const isAuthenticated = useIsAuthenticated();
+  const fetchingYNABData = useFetchingYNABData();
 
-  const [pageIndex, setPageIndex] = useState(0);
-  const [year, setYear] = useState(0);
+  const totalPages = 10;
+  const scrollPageThreshold = 1000;
+  const totalPageSections = 10;
 
-  useEffect(() => {
-    setLoadingData(true);
-    Promise.all([
-      fetchAccounts(accessToken, selectedBudgetId),
-      fetchCategories(accessToken, selectedBudgetId),
-      fetchMonthSummaries(accessToken, selectedBudgetId),
-      fetchPayeeLocations(accessToken, selectedBudgetId),
-      fetchPayees(accessToken, selectedBudgetId),
-      fetchTransactions(accessToken, selectedBudgetId),
-    ]).finally(() => setLoadingData(false));
-  }, [accessToken, selectedBudgetId]);
-
-  useEffect(() => {
-    const currentDate = new Date();
-    setYear(currentDate.getFullYear() - 1);
-  }, []);
+  const {
+    pageIndex,
+    currentPageSectionIndex,
+    handleScroll,
+    onSpecificPageSelection,
+  } = useHandleScroll(totalPages, scrollPageThreshold, totalPageSections);
 
   return (
-    <div className={styles['budget-wrapped-bg']}>
-      {loadingData && <div>{'Loading...'}</div>}
-      {!loadingData && (
-        <div>
-          {pageIndex === 0 && <StartPage year={year} />}
-          {pageIndex === 1 && <NetChanges year={year} />}
+    <div className={`page${pageIndex}`} onWheel={handleScroll}>
+      {!isAuthenticated && <button onClick={handleLogin}>{'Login'}</button>}
+      {isAuthenticated && fetchingYNABData && <div>{'Loading...'}</div>}
+      {isAuthenticated && !fetchingYNABData && (
+        <>
           <BudgetWrappedPageNavigator
             pageIndex={pageIndex}
-            totalPages={TOTAL_PAGES}
-            setPageIndex={setPageIndex}
+            totalPages={totalPages}
+            onPageSelection={onSpecificPageSelection}
           />
-        </div>
+          {pageIndex === 0 && (
+            <StartPage
+              id={`page${pageIndex}`}
+              pageSectionIndex={currentPageSectionIndex}
+            />
+          )}
+          {pageIndex === 1 && (
+            <NetChanges
+              id={`page${pageIndex}`}
+              pageSectionIndex={currentPageSectionIndex}
+            />
+          )}
+        </>
       )}
     </div>
   );
