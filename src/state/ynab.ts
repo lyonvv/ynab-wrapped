@@ -5,7 +5,7 @@ import { createRecordByField } from '../utils/utils';
 
 export const budgetSummariesAtom = atom<ynab.BudgetSummary[]>([]);
 
-export const currentBudgetIdAtom = atom<string | null>(null);
+export const currentBudgetIdAtom = atom<string | null>('default');
 
 export const transactionsAtom = atom<ynab.TransactionDetail[]>([]);
 

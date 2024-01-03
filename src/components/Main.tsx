@@ -18,6 +18,7 @@ export function Main() {
   const budgets = useBudgetSummaries();
 
   useEffect(() => {
+    if (selectedBudgetId) return;
     setFetchingBudgets(true);
     fetchBudgetSummaries(accessToken).finally(() => setFetchingBudgets(false));
   }, [fetchBudgetSummaries, accessToken]);
