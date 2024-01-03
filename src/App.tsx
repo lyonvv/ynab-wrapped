@@ -13,6 +13,8 @@ const App: React.FC = () => {
   useEffect(() => {
     const parsedHash = queryString.parse(window.location.hash);
 
+    console.log(parsedHash);
+
     if (
       parsedHash.access_token &&
       typeof parsedHash.access_token === 'string'
@@ -21,7 +23,7 @@ const App: React.FC = () => {
 
       window.location.hash = '';
     }
-  }, [window.location.hash]);
+  }, []);
 
   return <div>{accessToken ? <Main /> : <Login />}</div>;
 };

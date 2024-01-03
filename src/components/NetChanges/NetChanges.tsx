@@ -2,10 +2,10 @@ import { useAccountsMap, useTransactions } from '../../state/ynab';
 import { useMemo } from 'react';
 import * as ynab from 'ynab';
 import {
-  convertAndFormatYNABAmountToDollars,
   getStartingBalanceTransactionForAccount,
   getTransactionsBetweenDates,
 } from '../../utils/utils';
+import { NetChangesRow } from './NetChangesRow';
 
 type NetChangesProps = Readonly<{
   year: number;
@@ -89,40 +89,19 @@ export function NetChanges({ year }: NetChangesProps) {
           }
         </div>
         <div>
-          {Object.values(accountsMap).map((account) => {
-            const accountBalanceAtStartOfYear =
-              accountsBalanceAtStartOfYear[account.id] ?? 0;
-
-            const accountStartingBalanceTransaction =
-              accountsStartingBalanceTransactions[account.id];
-
-            const accountStartingBalanceTransactionDate = new Date(
-              accountStartingBalanceTransaction?.date
-            );
-
-            const accountYearChange = accountsYearChange[account.id] ?? 0;
-
-            return (
-              <div key={account.id}>
-                <div>{account.name}</div>
-                <div>
-                  {convertAndFormatYNABAmountToDollars(
-                    accountStartingBalanceTransactionDate.getFullYear() < year
-                      ? accountBalanceAtStartOfYear
-                      : accountStartingBalanceTransaction?.amount ?? 0
-                  )}
-                </div>
-                <div>
-                  {convertAndFormatYNABAmountToDollars(accountYearChange)}
-                </div>
-                <div>
-                  {convertAndFormatYNABAmountToDollars(
-                    accountBalanceAtStartOfYear + accountYearChange
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {Object.values(accountsMap).map((account) => (
+            <NetChangesRow
+              account={account}
+              year={year}
+              accountBalanceAtStartOfYear={
+                accountsBalanceAtStartOfYear[account.id]
+              }
+              accountStartingBalanceTransaction={
+                accountsStartingBalanceTransactions[account.id]
+              }
+              accountYearChange={accountsYearChange[account.id]}
+            />
+          ))}
         </div>
       </div>
     </div>

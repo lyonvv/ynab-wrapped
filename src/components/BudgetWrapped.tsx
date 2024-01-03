@@ -49,21 +49,23 @@ export function BudgetWrapped() {
           {pageIndex === 0 && <StartPage year={year} />}
           {pageIndex === 1 && <NetChanges year={year} />}
           <div>
-            <Button
+            <button
               disabled={pageIndex === 0}
-              text={'Previous'}
               onClick={() => setPageIndex(pageIndex - 1)}
-            />
+            >
+              {'Previous'}
+            </button>
             <div>
               {[...Array(TOTAL_PAGES)].map((_, index) => (
                 <div />
               ))}
             </div>
-            <Button
-              disabled={pageIndex == TOTAL_PAGES - 1}
-              text={'Next'}
+            <button
+              disabled={pageIndex === TOTAL_PAGES - 1}
               onClick={() => setPageIndex(pageIndex + 1)}
-            />
+            >
+              {'Next'}
+            </button>
           </div>
         </div>
       )}

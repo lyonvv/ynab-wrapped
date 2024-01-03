@@ -1,20 +1,23 @@
-import { currentBudgetIdAtom, useBudgetSummaries } from '../state/ynab';
+import { currentBudgetIdAtom } from '../state/ynab';
 import * as ynab from 'ynab';
-import { useEffect, useMemo } from 'react';
-import { globalStore } from '../state/globalStore';
 import { useAtom, useAtomValue } from 'jotai';
-
 
 type BudgetSelectorProps = Readonly<{
   budgets: ynab.BudgetSummary[];
 }>;
 
-export function BudgetSelector({budgets}: BudgetSelectorProps) {
-  const [currentBudgetId, setCurrentBudgetId] = useAtom(currentBudgetIdAtom);
-
-
+export function BudgetSelector({ budgets }: BudgetSelectorProps) {
+  const [_, setCurrentBudgetId] = useAtom(currentBudgetIdAtom);
 
   return (
-    
+    <div>
+      {budgets.map((budget) => (
+        <div key={budget.id}>
+          <button onClick={() => setCurrentBudgetId(budget.id)}>
+            {budget.name}
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }
