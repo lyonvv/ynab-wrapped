@@ -12,6 +12,8 @@ import { useAtom } from 'jotai';
 import { accessTokenAtom } from '../state/auth';
 import { StartPage } from './StartPage';
 import { NetChanges } from './NetChanges/NetChanges';
+import styles from './BudgetWrapped.module.scss';
+import { BudgetWrappedPageNavigator } from './BudgetWrappedPageNavigator';
 
 const TOTAL_PAGES = 2;
 
@@ -42,31 +44,17 @@ export function BudgetWrapped() {
   }, []);
 
   return (
-    <div>
+    <div className={styles['budget-wrapped-bg']}>
       {loadingData && <div>{'Loading...'}</div>}
       {!loadingData && (
         <div>
           {pageIndex === 0 && <StartPage year={year} />}
           {pageIndex === 1 && <NetChanges year={year} />}
-          <div>
-            <button
-              disabled={pageIndex === 0}
-              onClick={() => setPageIndex(pageIndex - 1)}
-            >
-              {'Previous'}
-            </button>
-            <div>
-              {[...Array(TOTAL_PAGES)].map((_, index) => (
-                <div />
-              ))}
-            </div>
-            <button
-              disabled={pageIndex === TOTAL_PAGES - 1}
-              onClick={() => setPageIndex(pageIndex + 1)}
-            >
-              {'Next'}
-            </button>
-          </div>
+          <BudgetWrappedPageNavigator
+            pageIndex={pageIndex}
+            totalPages={TOTAL_PAGES}
+            setPageIndex={setPageIndex}
+          />
         </div>
       )}
     </div>

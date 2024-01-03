@@ -2,10 +2,12 @@ import { useAccountsMap, useTransactions } from '../../state/ynab';
 import { useMemo } from 'react';
 import * as ynab from 'ynab';
 import {
+  convertAndFormatYNABAmountToDollars,
   getStartingBalanceTransactionForAccount,
   getTransactionsBetweenDates,
 } from '../../utils/utils';
 import { NetChangesRow } from './NetChangesRow';
+import { TotalNetChanges } from './TotalNetChanges';
 
 type NetChangesProps = Readonly<{
   year: number;
@@ -81,6 +83,10 @@ export function NetChanges({ year }: NetChangesProps) {
   return (
     <div>
       <div>Net Changes</div>
+      <TotalNetChanges
+        accountsBalanceAtStartOfYear={accountsBalanceAtStartOfYear}
+        accountsYearChange={accountsYearChange}
+      />
 
       <div>
         <div>
