@@ -1,13 +1,13 @@
 import { currentBudgetIdAtom } from '../state/ynab';
 import * as ynab from 'ynab';
-import { useAtom, useAtomValue } from 'jotai';
+import { useSetAtom } from 'jotai';
 
 type BudgetSelectorProps = Readonly<{
   budgets: ynab.BudgetSummary[];
 }>;
 
 export function BudgetSelector({ budgets }: BudgetSelectorProps) {
-  const [_, setCurrentBudgetId] = useAtom(currentBudgetIdAtom);
+  const setCurrentBudgetId = useSetAtom(currentBudgetIdAtom);
 
   return (
     <div>

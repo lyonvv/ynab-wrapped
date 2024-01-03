@@ -21,7 +21,7 @@ export function Main() {
     if (selectedBudgetId) return;
     setFetchingBudgets(true);
     fetchBudgetSummaries(accessToken).finally(() => setFetchingBudgets(false));
-  }, [fetchBudgetSummaries, accessToken]);
+  }, [accessToken, selectedBudgetId]);
 
   return (
     <div>
