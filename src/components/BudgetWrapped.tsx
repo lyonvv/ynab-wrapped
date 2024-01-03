@@ -7,6 +7,8 @@ import { handleLogin } from '../loginHelper';
 import { useFetchYNABData } from '../hooks/useFetchYNABData';
 import { useHandleScroll } from '../hooks/useHandleScroll';
 import { useSetAccessToken } from '../hooks/useSetAccessToken';
+import classNames from 'classnames';
+import styles from './BudgetWrappedPageNavigator.module.scss';
 
 export function BudgetWrapped() {
   useSetAccessToken();
@@ -26,8 +28,15 @@ export function BudgetWrapped() {
     onSpecificPageSelection,
   } = useHandleScroll(totalPages, scrollPageThreshold, totalPageSections);
 
+  const classes = classNames(
+    styles['budget-wrapped'],
+    `page${pageIndex}`,
+    'bg-normal',
+    'text-normal'
+  );
+
   return (
-    <div className={`page${pageIndex}`} onWheel={handleScroll}>
+    <div className={classes} onWheel={handleScroll}>
       {!isAuthenticated && <button onClick={handleLogin}>{'Login'}</button>}
       {isAuthenticated && fetchingYNABData && <div>{'Loading...'}</div>}
       {isAuthenticated && !fetchingYNABData && (

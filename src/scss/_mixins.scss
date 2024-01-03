@@ -1,6 +1,6 @@
 @import './_colorSchemes.scss';
 
-@mixin apply-color-scheme($scheme-name: 'default-scheme') {
+@mixin apply-color-scheme($scheme-name: 'default-tcheme') {
   $color-scheme: map-get($color-schemes, $scheme-name);
 
   $primary-color: map-get($color-scheme, primary-color);

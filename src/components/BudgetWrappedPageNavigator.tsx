@@ -16,15 +16,17 @@ export const BudgetWrappedPageNavigator = ({
     <div className={styles['page-navigator']}>
       <div className={styles['indicator-dots']}>
         {[...Array(totalPages)].map((_, index) => {
-          const classes = classNames();
+          const isSelected = index === pageIndex;
+
+          const classes = classNames(styles['indicator-dot'], {
+            [styles['is-selected']]: isSelected,
+            'bg-accent': isSelected,
+            'bg-primary': !isSelected,
+          });
 
           return (
             <div
-              className={`${styles['indicator-dot']} ${
-                index === pageIndex
-                  ? `${styles['is-selected']} bg-accent`
-                  : ' bg-primary'
-              }`}
+              className={classes}
               onClick={() => onPageSelection(index)}
               key={'page-navigator-' + index}
             />

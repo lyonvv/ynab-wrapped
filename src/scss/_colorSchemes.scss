@@ -1,10 +1,12 @@
+@import './_colors.scss';
+
 $color-schemes: (
   default-theme: (
-    background-color: #fff,
-    text-color: #000,
-    primary-color: #007bff,
-    secondary-color: #6c757d,
-    accent-color: #6c757d,
+    background-color: $white,
+    text-color: darken($blue, 50%),
+    primary-color: $blue,
+    secondary-color: $green,
+    accent-color: lighten($green, 50%),
   ),
   theme-1: (
     background-color: #000,

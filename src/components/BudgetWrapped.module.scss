@@ -1,3 +1,6 @@
 @import '../scss/mixins.scss';
 
-@include apply-color-scheme();
+.budget-wrapped {
+  display: flex;
+  height: 100vh;
+}
