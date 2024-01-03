@@ -4,10 +4,11 @@ import { useAtom } from 'jotai';
 import { accessTokenAtom } from './state/auth';
 import { Login } from './components/Login';
 import { Main } from './components/Main';
+import { globalStore } from './state/globalStore';
 import queryString from 'query-string';
 
 const App: React.FC = () => {
-  const [accessToken, setAccessToken] = useAtom(accessTokenAtom);
+  const [accessToken] = useAtom(accessTokenAtom);
 
   useEffect(() => {
     const parsedHash = queryString.parse(window.location.hash);
@@ -16,13 +17,13 @@ const App: React.FC = () => {
       parsedHash.access_token &&
       typeof parsedHash.access_token === 'string'
     ) {
-      setAccessToken(parsedHash.access_token);
+      globalStore.set(accessTokenAtom, parsedHash.access_token);
 
       window.location.hash = '';
     }
-  }, [setAccessToken]);
+  }, [window.location.hash]);
 
-  return <div className="App">{!accessToken ? <Login /> : <Main />}</div>;
+  return <div>{accessToken ? <Main /> : <Login />}</div>;
 };
 
 export default App;

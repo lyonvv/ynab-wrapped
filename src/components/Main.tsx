@@ -1,9 +1,12 @@
 import { useAtom } from 'jotai';
 import { accessTokenAtom } from '../state/auth';
 import { useEffect, useState } from 'react';
-import { currentBudgetIdAtom } from '../state/ynab';
+import {
+  currentBudgetIdAtom,
+  fetchBudgetSummaries,
+  useBudgetSummaries,
+} from '../state/ynab';
 import { BudgetSelector } from './BudgetSelector';
-import { useBudgetSummaries, useTransactions } from '../services/ynabApiHelper';
 import { BudgetWrapped } from './BudgetWrapped';
 
 export function Main() {
@@ -12,17 +15,18 @@ export function Main() {
 
   const [fetchingBudgets, setFetchingBudgets] = useState(false);
 
-  const fetchBudgets = useBudgetSummaries(accessToken);
-  const fetchTransactions = useTransactions(accessToken, selectedBudgetId);
+  const budgets = useBudgetSummaries();
 
   useEffect(() => {
     setFetchingBudgets(true);
-    fetchBudgets().finally(() => setFetchingBudgets(false));
-  }, [fetchBudgets]);
+    fetchBudgetSummaries(accessToken).finally(() => setFetchingBudgets(false));
+  }, [fetchBudgetSummaries, accessToken]);
 
   return (
     <div>
-      {!selectedBudgetId && !fetchingBudgets && <BudgetSelector />}
+      {!selectedBudgetId && !fetchingBudgets && (
+        <BudgetSelector budgets={budgets} />
+      )}
       {fetchingBudgets && <div>{'Loading...'}</div>}
       {selectedBudgetId && <BudgetWrapped />}
     </div>
