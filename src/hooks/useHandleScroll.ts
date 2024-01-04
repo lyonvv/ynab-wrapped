@@ -8,7 +8,7 @@ export function useHandleScroll(totalPages: number) {
   const accumulatedScrollDeltaY = useRef(0);
   const animationFrameId = useRef<number | null>(null);
 
-  const updateScrollState = () => {
+  const updateScrollState =useCallback( () => {
     setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
 
     if (
@@ -23,7 +23,7 @@ export function useHandleScroll(totalPages: number) {
       accumulatedScrollDeltaY.current = SCROLL_THRESHOLD - 1;
       setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
     }
-  };
+  }, [pageIndex, totalPages]);
 
   const handleScroll = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
@@ -33,7 +33,7 @@ export function useHandleScroll(totalPages: number) {
       }
       animationFrameId.current = requestAnimationFrame(updateScrollState);
     },
-    [pageIndex, totalPages, updateScrollState]
+    [updateScrollState]
   );
 
   const onSpecificPageSelection = useCallback(
