@@ -33,7 +33,7 @@ export function useHandleScroll(totalPages: number) {
       }
       animationFrameId.current = requestAnimationFrame(updateScrollState);
     },
-    [pageIndex, totalPages]
+    [pageIndex, totalPages, updateScrollState]
   );
 
   const onSpecificPageSelection = useCallback(
