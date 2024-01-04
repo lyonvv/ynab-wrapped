@@ -1,6 +1,5 @@
-import { useAccountsMap, useTransactions } from '../../state/ynab';
+import { useTransactions } from '../../state/ynab';
 import { useMemo } from 'react';
-import * as ynab from 'ynab';
 import {
   convertAndFormatYNABAmountToDollars,
   getTransactionsBetweenDates,
@@ -16,7 +15,6 @@ type NetChangesProps = Readonly<{
 
 export function NetChanges({ id, scrollProgress }: NetChangesProps) {
   const transactions = useTransactions();
-  const accountsMap = useAccountsMap();
   const year = useSelectedYear();
 
   const transactionsUpToYear = useMemo(
@@ -45,7 +43,7 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
         (total, transaction) => total + transaction.amount,
         0
       ),
-    [accountsMap, transactionsUpToYear]
+    [transactionsUpToYear]
   );
 
   const changeDuringYear = useMemo(
@@ -54,7 +52,7 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
         (total, transaction) => total + transaction.amount,
         0
       ),
-    [accountsMap, transactionsInYear]
+    [transactionsInYear]
   );
 
   const sortedTransactionsInYear = useMemo(
@@ -81,7 +79,7 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
         netWorth,
       };
     });
-  }, [sortedTransactionsInYear]);
+  }, [sortedTransactionsInYear, totalAtStartOfYear]);
 
   const isIncrease = changeDuringYear >= 0;
 
