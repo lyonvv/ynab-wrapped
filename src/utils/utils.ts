@@ -35,8 +35,8 @@ export const isTransactionTransfer = (transaction: ynab.TransactionDetail) => {
   return !transaction.transfer_transaction_id;
 };
 
-export const convertYNABValueToDollars = (value: number) => {
-  return value / 1000;
+export const convertYNABValueToDollars = (milliAmount: number) => {
+  return ynab.utils.convertMilliUnitsToCurrencyAmount(milliAmount, 2);
 };
 
 export const getTransactionsBetweenDates = (
@@ -60,8 +60,8 @@ export const getTotalAmount = (transactions: ynab.TransactionDetail[]) => {
   }, 0);
 };
 
-export const convertAndFormatYNABAmountToDollars = (amount: number) => {
-  return convertYNABValueToDollars(amount).toLocaleString('en-US', {
+export const convertAndFormatYNABAmountToDollars = (milliAmount: number) => {
+  return convertYNABValueToDollars(milliAmount).toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
   });

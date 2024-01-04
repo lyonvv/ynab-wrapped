@@ -1,10 +1,13 @@
 import { useAccountsMap, useTransactions } from '../../state/ynab';
 import { useMemo } from 'react';
 import * as ynab from 'ynab';
-import { getTransactionsBetweenDates } from '../../utils/utils';
-import { TotalNetChanges } from './TotalNetChanges';
+import {
+  convertAndFormatYNABAmountToDollars,
+  getTransactionsBetweenDates,
+} from '../../utils/utils';
 import { useSelectedYear } from '../../state/appState';
 import { Page } from '../Page';
+import { AnimatedNetWorthGraph } from './AnimatedNetWorthGraph';
 
 type NetChangesProps = Readonly<{
   id: string;
@@ -36,43 +39,89 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
     [transactions, year]
   );
 
-  const getAmountTotalsByAccount = (
-    transactions: ynab.TransactionDetail[],
-    accountsMap: Record<string, ynab.Account>
-  ) =>
-    transactions.reduce((acc, transaction) => {
-      const account = accountsMap[transaction.account_id];
-
-      if (!(account.id in acc)) {
-        acc[account.id] = 0;
-      }
-
-      acc[account.id] += transaction.amount;
-
-      return acc;
-    }, {} as Record<string, number>);
-
-  const accountsBalanceAtStartOfYear = useMemo(
-    () => getAmountTotalsByAccount(transactionsUpToYear, accountsMap),
+  const totalAtStartOfYear = useMemo(
+    () =>
+      transactionsUpToYear.reduce(
+        (total, transaction) => total + transaction.amount,
+        0
+      ),
     [accountsMap, transactionsUpToYear]
   );
 
-  const accountsYearChange = useMemo(
-    () => getAmountTotalsByAccount(transactionsInYear, accountsMap),
-
+  const changeDuringYear = useMemo(
+    () =>
+      transactionsInYear.reduce(
+        (total, transaction) => total + transaction.amount,
+        0
+      ),
     [accountsMap, transactionsInYear]
   );
 
+  const sortedTransactionsInYear = useMemo(
+    () =>
+      transactionsInYear.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getDate()
+      ),
+    [transactionsInYear]
+  );
+
+  const netWorthInYear = useMemo(() => {
+    let cumulativeNetWorth = totalAtStartOfYear;
+    const netWorthMap: Record<string, number> = {};
+
+    sortedTransactionsInYear.forEach((transaction) => {
+      const dateStr = new Date(transaction.date).toISOString().split('T')[0];
+      cumulativeNetWorth += transaction.amount;
+      netWorthMap[dateStr] = cumulativeNetWorth;
+    });
+
+    return Object.entries(netWorthMap).map(([date, netWorth]) => {
+      return {
+        date: new Date(date),
+        netWorth,
+      };
+    });
+  }, [sortedTransactionsInYear]);
+
+  const isIncrease = changeDuringYear >= 0;
+
+  const preamble = isIncrease
+    ? 'You increased your net worth by '
+    : 'Your net worth decreased by ';
+
+  const getNetWorthGraphAnimationProgress = (scrollProgress: number) => {
+    const start = 0.5;
+    const end = 0.8;
+    const range = end - start;
+    const progress = Math.max(0, Math.min(1, (scrollProgress - start) / range));
+    return progress;
+  };
 
   return (
     <Page id={id}>
       <div>Net Changes</div>
-      <TotalNetChanges
-        accountsBalanceAtStartOfYear={accountsBalanceAtStartOfYear}
-        accountsYearChange={accountsYearChange}
-        scrollProgress={scrollProgress}
+      <div>
+        <div>{preamble}</div>
+        <div>{convertAndFormatYNABAmountToDollars(changeDuringYear)}</div>
+      </div>
+      <div>
+        <div>{'You started the year at '}</div>
+        <div>{convertAndFormatYNABAmountToDollars(totalAtStartOfYear)}</div>
+      </div>
+      <div>
+        <div>{'You ended the year at '}</div>
+        <div>
+          {convertAndFormatYNABAmountToDollars(
+            totalAtStartOfYear + changeDuringYear
+          )}
+        </div>
+      </div>
+      <AnimatedNetWorthGraph
+        animationProgress={getNetWorthGraphAnimationProgress(scrollProgress)}
+        data={netWorthInYear ?? []}
       />
-      <div> {'page section index: ' + scrollProgress} </div>
+
+      <div> {'Scroll Progress' + scrollProgress} </div>
     </Page>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 
-const SCROLL_THRESHOLD = 1000; // Define your scroll threshold here
+const SCROLL_THRESHOLD = 10000; // Define your scroll threshold here
 
 export function useHandleScroll(totalPages: number) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -8,7 +8,7 @@ export function useHandleScroll(totalPages: number) {
   const accumulatedScrollDeltaY = useRef(0);
   const animationFrameId = useRef<number | null>(null);
 
-  const updateScrollState =useCallback( () => {
+  const updateScrollState = useCallback(() => {
     setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
 
     if (
