@@ -53,13 +53,13 @@ export function BudgetWrapped() {
           {pageIndex === 0 && (
             <StartPage
               id={`page${pageIndex}`}
-              pageSectionIndex={scrollProgress}
+              scrollProgress={scrollProgress}
             />
           )}
           {pageIndex === 1 && (
             <NetChanges
               id={`page${pageIndex}`}
-              pageSectionIndex={scrollProgress}
+              scrollProgress={scrollProgress}
             />
           )}
           {pageIndex > 1 && (

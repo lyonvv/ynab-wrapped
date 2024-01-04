@@ -3,10 +3,10 @@ import { Page } from './Page';
 
 type StartPageProps = Readonly<{
   id: string;
-  pageSectionIndex: number;
+  scrollProgress: number;
 }>;
 
-export function StartPage({ id, pageSectionIndex }: StartPageProps) {
+export function StartPage({ id, scrollProgress }: StartPageProps) {
   const year = useSelectedYear();
 
   return (
@@ -14,7 +14,7 @@ export function StartPage({ id, pageSectionIndex }: StartPageProps) {
       <div>{'Welcome to YNAB Wrapped!'}</div>
       <div>{`Let's take a look back at your YNAB journey in ${year}`}</div>
       <div>{'Scroll down to get started'}</div>
-      <div>{`Page section index: ${pageSectionIndex}`}</div>
+      <div>{`Page section index: ${scrollProgress}`}</div>
     </Page>
   );
 }

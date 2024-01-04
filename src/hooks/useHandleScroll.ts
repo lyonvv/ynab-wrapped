@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 
-const SCROLL_THRESHOLD = 100; // Define your scroll threshold here
-const TOTAL_PAGE_SECTIONS = 10; // Define the total number of page sections here
+const SCROLL_THRESHOLD = 1000; // Define your scroll threshold here
 
 export function useHandleScroll(totalPages: number) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -12,19 +11,17 @@ export function useHandleScroll(totalPages: number) {
   const updateScrollState = () => {
     setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
 
-    const currentPageSectionIndex = Math.round(
-      (accumulatedScrollDeltaY.current / SCROLL_THRESHOLD) * TOTAL_PAGE_SECTIONS
-    );
-
     if (
       accumulatedScrollDeltaY.current > SCROLL_THRESHOLD &&
       pageIndex < totalPages - 1
     ) {
       setPageIndex(pageIndex + 1);
       accumulatedScrollDeltaY.current = 0;
+      setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
     } else if (accumulatedScrollDeltaY.current < 0 && pageIndex > 0) {
       setPageIndex(pageIndex - 1);
       accumulatedScrollDeltaY.current = SCROLL_THRESHOLD - 1;
+      setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
     }
   };
 

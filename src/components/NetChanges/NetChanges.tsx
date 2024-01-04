@@ -8,10 +8,10 @@ import { Page } from '../Page';
 
 type NetChangesProps = Readonly<{
   id: string;
-  pageSectionIndex: number;
+  scrollProgress: number;
 }>;
 
-export function NetChanges({ id, pageSectionIndex }: NetChangesProps) {
+export function NetChanges({ id, scrollProgress }: NetChangesProps) {
   const transactions = useTransactions();
   const accountsMap = useAccountsMap();
   const year = useSelectedYear();
@@ -63,14 +63,16 @@ export function NetChanges({ id, pageSectionIndex }: NetChangesProps) {
     [accountsMap, transactionsInYear]
   );
 
+
   return (
     <Page id={id}>
       <div>Net Changes</div>
       <TotalNetChanges
         accountsBalanceAtStartOfYear={accountsBalanceAtStartOfYear}
         accountsYearChange={accountsYearChange}
+        scrollProgress={scrollProgress}
       />
-      <div> {'page section index: ' + pageSectionIndex} </div>
+      <div> {'page section index: ' + scrollProgress} </div>
     </Page>
   );
 }
