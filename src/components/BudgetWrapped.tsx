@@ -9,6 +9,7 @@ import { useHandleScroll } from '../hooks/useHandleScroll';
 import { useSetAccessToken } from '../hooks/useSetAccessToken';
 import classNames from 'classnames';
 import styles from './BudgetWrappedPageNavigator.module.scss';
+import { Page } from './Page';
 
 export function BudgetWrapped() {
   useSetAccessToken();
@@ -18,15 +19,9 @@ export function BudgetWrapped() {
   const fetchingYNABData = useFetchingYNABData();
 
   const totalPages = 10;
-  const scrollPageThreshold = 1000;
-  const totalPageSections = 10;
 
-  const {
-    pageIndex,
-    currentPageSectionIndex,
-    handleScroll,
-    onSpecificPageSelection,
-  } = useHandleScroll(totalPages, scrollPageThreshold, totalPageSections);
+  const { pageIndex, pageSectionIndex, handleScroll, onSpecificPageSelection } =
+    useHandleScroll(totalPages);
 
   const classes = classNames(
     styles['budget-wrapped'],
@@ -37,26 +32,40 @@ export function BudgetWrapped() {
 
   return (
     <div className={classes} onWheel={handleScroll}>
-      {!isAuthenticated && <button onClick={handleLogin}>{'Login'}</button>}
-      {isAuthenticated && fetchingYNABData && <div>{'Loading...'}</div>}
+      {!isAuthenticated && (
+        <Page id={'login'}>
+          <button onClick={handleLogin}>{'Login'}</button>
+        </Page>
+      )}
+      {isAuthenticated && fetchingYNABData && (
+        <Page id="loading-screen">
+          <div>{'Loading...'}</div>
+        </Page>
+      )}
       {isAuthenticated && !fetchingYNABData && (
         <>
           <BudgetWrappedPageNavigator
             pageIndex={pageIndex}
             totalPages={totalPages}
             onPageSelection={onSpecificPageSelection}
+            classes={styles['page-navigator']}
           />
           {pageIndex === 0 && (
             <StartPage
               id={`page${pageIndex}`}
-              pageSectionIndex={currentPageSectionIndex}
+              pageSectionIndex={pageSectionIndex}
             />
           )}
           {pageIndex === 1 && (
             <NetChanges
               id={`page${pageIndex}`}
-              pageSectionIndex={currentPageSectionIndex}
+              pageSectionIndex={pageSectionIndex}
             />
+          )}
+          {pageIndex > 1 && (
+            <Page id={`page${pageIndex}`}>
+              <div>{`page ${pageIndex}`}</div>
+            </Page>
           )}
         </>
       )}

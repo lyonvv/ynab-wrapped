@@ -1,68 +1,55 @@
 import { useState, useRef, useCallback } from 'react';
 
-export function useHandleScroll(
-  totalPages: number,
-  totalPageSections: number,
-  scrollThreshold: number
-) {
+const SCROLL_THRESHOLD = 100; // Define your scroll threshold here
+const TOTAL_PAGE_SECTIONS = 10; // Define the total number of page sections here
+
+export function useHandleScroll(totalPages: number) {
   const [pageIndex, setPageIndex] = useState(0);
-  const [currentPageSectionIndex, setCurrentPageSectionIndex] = useState(0);
+  const [pageSectionIndex, setPageSectionIndex] = useState(0);
   const accumulatedScrollDeltaY = useRef(0);
 
   const handleScroll = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
       accumulatedScrollDeltaY.current += e.deltaY;
 
-      const newPageSectionIndex = Math.min(
-        totalPageSections - 1,
-        Math.max(
-          0,
-          Math.floor(
-            accumulatedScrollDeltaY.current /
-              (scrollThreshold / totalPageSections)
-          )
-        )
+      const currentPageSectionIndex = Math.round(
+        (accumulatedScrollDeltaY.current / SCROLL_THRESHOLD) *
+          TOTAL_PAGE_SECTIONS
       );
 
-      if (newPageSectionIndex !== currentPageSectionIndex) {
-        setCurrentPageSectionIndex(newPageSectionIndex);
+      if (currentPageSectionIndex !== pageSectionIndex) {
+        setPageSectionIndex(currentPageSectionIndex);
       }
 
       if (
-        accumulatedScrollDeltaY.current > scrollThreshold &&
+        accumulatedScrollDeltaY.current > SCROLL_THRESHOLD &&
         pageIndex < totalPages - 1
       ) {
         setPageIndex(pageIndex + 1);
-        setCurrentPageSectionIndex(0);
+        setPageSectionIndex(0);
         accumulatedScrollDeltaY.current = 0;
       } else if (accumulatedScrollDeltaY.current < 0 && pageIndex > 0) {
         setPageIndex(pageIndex - 1);
-        setCurrentPageSectionIndex(totalPageSections - 1);
-        accumulatedScrollDeltaY.current = scrollThreshold - 1;
+        setPageSectionIndex(TOTAL_PAGE_SECTIONS - 1);
+        accumulatedScrollDeltaY.current = SCROLL_THRESHOLD - 1;
       }
     },
-    [
-      pageIndex,
-      currentPageSectionIndex,
-      totalPages,
-      totalPageSections,
-      scrollThreshold,
-    ]
+    [pageIndex, pageSectionIndex, totalPages]
   );
 
   const onSpecificPageSelection = useCallback(
     (index: number) => {
       setPageIndex(index);
-      setCurrentPageSectionIndex(0);
-      accumulatedScrollDeltaY.current = 0;
+      setPageSectionIndex(Math.round(TOTAL_PAGE_SECTIONS / 2));
+      accumulatedScrollDeltaY.current = Math.round(SCROLL_THRESHOLD / 2);
     },
-    [setPageIndex, setCurrentPageSectionIndex]
+    [setPageIndex, setPageSectionIndex]
   );
 
   return {
     pageIndex,
-    currentPageSectionIndex,
     handleScroll,
     onSpecificPageSelection,
+    pageSectionIndex,
   };
 }

@@ -4,6 +4,7 @@ import * as ynab from 'ynab';
 import { getTransactionsBetweenDates } from '../../utils/utils';
 import { TotalNetChanges } from './TotalNetChanges';
 import { useSelectedYear } from '../../state/appState';
+import { Page } from '../Page';
 
 type NetChangesProps = Readonly<{
   id: string;
@@ -63,13 +64,13 @@ export function NetChanges({ id, pageSectionIndex }: NetChangesProps) {
   );
 
   return (
-    <div id={id}>
+    <Page id={id}>
       <div>Net Changes</div>
       <TotalNetChanges
         accountsBalanceAtStartOfYear={accountsBalanceAtStartOfYear}
         accountsYearChange={accountsYearChange}
       />
       <div> {'page section index: ' + pageSectionIndex} </div>
-    </div>
+    </Page>
   );
 }

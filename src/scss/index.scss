@@ -22,11 +22,3 @@ select {
 }
 
 @include apply-color-scheme(default-theme);
-
-.page0 {
-  @include apply-color-scheme(default-theme);
-}
-
-.page1 {
-  @include apply-color-scheme(theme-1);
-}
