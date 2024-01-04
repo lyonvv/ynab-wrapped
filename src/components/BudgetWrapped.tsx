@@ -20,7 +20,7 @@ export function BudgetWrapped() {
 
   const totalPages = 10;
 
-  const { pageIndex, pageSectionIndex, handleScroll, onSpecificPageSelection } =
+  const { pageIndex, scrollProgress, handleScroll, onSpecificPageSelection } =
     useHandleScroll(totalPages);
 
   const classes = classNames(
@@ -53,13 +53,13 @@ export function BudgetWrapped() {
           {pageIndex === 0 && (
             <StartPage
               id={`page${pageIndex}`}
-              pageSectionIndex={pageSectionIndex}
+              pageSectionIndex={scrollProgress}
             />
           )}
           {pageIndex === 1 && (
             <NetChanges
               id={`page${pageIndex}`}
-              pageSectionIndex={pageSectionIndex}
+              pageSectionIndex={scrollProgress}
             />
           )}
           {pageIndex > 1 && (
