@@ -20,7 +20,7 @@ export function useHandleScroll(totalPages: number) {
       setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
     } else if (accumulatedScrollDeltaY.current < 0 && pageIndex > 0) {
       setPageIndex(pageIndex - 1);
-      accumulatedScrollDeltaY.current = SCROLL_THRESHOLD - 1;
+      accumulatedScrollDeltaY.current = SCROLL_THRESHOLD;
       setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
     }
   }, [pageIndex, totalPages]);

@@ -40,7 +40,7 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
     : 'Your net worth decreased by ';
 
   return (
-    <Page id={id}>
+    <Page id={id} scrollProgress={scrollProgress}>
       <div>Net Changes</div>
       <div>
         <div>{preamble}</div>

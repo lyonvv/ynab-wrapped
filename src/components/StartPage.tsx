@@ -10,7 +10,7 @@ export function StartPage({ id, scrollProgress }: StartPageProps) {
   const year = useSelectedYear();
 
   return (
-    <Page id={id}>
+    <Page id={id} scrollProgress={scrollProgress}>
       <div>{'Welcome to YNAB Wrapped!'}</div>
       <div>{`Let's take a look back at your YNAB journey in ${year}`}</div>
       <div>{'Scroll down to get started'}</div>

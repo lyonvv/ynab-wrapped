@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import styles from './BudgetWrappedPageNavigator.module.scss';
 import { Page } from './Page';
 import { AccountsPage } from './Accounts/AccountsPage';
+import { Socket } from 'dgram';
 
 export function BudgetWrapped() {
   useSetAccessToken();
@@ -34,12 +35,12 @@ export function BudgetWrapped() {
   return (
     <div className={classes} onWheel={handleScroll}>
       {!isAuthenticated && (
-        <Page id={'login'}>
+        <Page id={'login'} scrollProgress={0}>
           <button onClick={handleLogin}>{'Login'}</button>
         </Page>
       )}
       {isAuthenticated && fetchingYNABData && (
-        <Page id="loading-screen">
+        <Page id="loading-screen" scrollProgress={0}>
           <div>{'Loading...'}</div>
         </Page>
       )}
@@ -63,9 +64,14 @@ export function BudgetWrapped() {
               scrollProgress={scrollProgress}
             />
           )}
-          {pageIndex === 2 && <AccountsPage id={`page${pageIndex}`} />}
+          {pageIndex === 2 && (
+            <AccountsPage
+              scrollProgress={scrollProgress}
+              id={`page${pageIndex}`}
+            />
+          )}
           {pageIndex > 2 && (
-            <Page id={`page${pageIndex}`}>
+            <Page id={`page${pageIndex}`} scrollProgress={scrollProgress}>
               <div>{`page ${pageIndex}`}</div>
             </Page>
           )}

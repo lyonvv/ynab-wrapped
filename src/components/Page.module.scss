@@ -3,3 +3,11 @@
   position: relative;
   overflow: hidden;
 }
+
+.progress-bar {
+  height: 5px; /* Adjust the height as needed */
+  background-color: blue;
+  top: 0;
+  left: 0;
+  z-index: 10; /* Ensures it overlaps the content */
+}

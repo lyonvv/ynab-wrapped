@@ -5,26 +5,23 @@ import * as ynab from 'ynab';
 
 type AccountsPageProps = Readonly<{
   id: string;
+  scrollProgress: number;
 }>;
 
-export function AccountsPage({ id }: AccountsPageProps) {
+export function AccountsPage({ id, scrollProgress }: AccountsPageProps) {
   const acconutsMap = useAccountsMap();
 
   const transactionsInYear = useTransactionsInYear();
 
   const transactionsGroupedByAccount = useMemo(
     () =>
-      transactionsInYear.reduce(
-        (agg, transaction) => {
-          if (!(transaction.account_id in agg))
-            agg[transaction.account_id] = [];
+      transactionsInYear.reduce((agg, transaction) => {
+        if (!(transaction.account_id in agg)) agg[transaction.account_id] = [];
 
-          agg[transaction.account_id].push(transaction);
+        agg[transaction.account_id].push(transaction);
 
-          return agg;
-        },
-        {} as Record<string, ynab.TransactionDetail[]>
-      ),
+        return agg;
+      }, {} as Record<string, ynab.TransactionDetail[]>),
     [transactionsInYear]
   );
 
@@ -38,7 +35,7 @@ export function AccountsPage({ id }: AccountsPageProps) {
   //net
 
   return (
-    <Page id={id}>
+    <Page id={id} scrollProgress={scrollProgress}>
       <div>{`You used ${accounts.length} different accounts this year`}</div>
       <div>
         {accounts.map((a) => (
