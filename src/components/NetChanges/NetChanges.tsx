@@ -1,4 +1,4 @@
-import { useAccountsMap, useTransactions } from '../../state/ynab';
+import { useAccountsMap, useTransactions, useTransactionsInYear, useTransactionsUpToYear } from '../../state/ynab';
 import { useMemo } from 'react';
 import * as ynab from 'ynab';
 import { getTransactionsBetweenDates } from '../../utils/utils';
@@ -12,29 +12,12 @@ type NetChangesProps = Readonly<{
 }>;
 
 export function NetChanges({ id, scrollProgress }: NetChangesProps) {
-  const transactions = useTransactions();
   const accountsMap = useAccountsMap();
-  const year = useSelectedYear();
 
-  const transactionsUpToYear = useMemo(
-    () =>
-      getTransactionsBetweenDates(
-        transactions,
-        undefined,
-        new Date(year, 0, 1)
-      ),
-    [transactions, year]
-  );
+  const transactionsUpToYear = useTransactionsUpToYear();
 
-  const transactionsInYear = useMemo(
-    () =>
-      getTransactionsBetweenDates(
-        transactions,
-        new Date(year, 0, 1),
-        new Date(year + 1, 0, 1)
-      ),
-    [transactions, year]
-  );
+  const transactionsInYear = useTransactionsInYear();
+  
 
   const getAmountTotalsByAccount = (
     transactions: ynab.TransactionDetail[],
