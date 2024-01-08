@@ -63,11 +63,7 @@ export function BudgetWrapped() {
               scrollProgress={scrollProgress}
             />
           )}
-          {pageIndex === 2 && (
-            <AccountsPage
-              id={`page${pageIndex}`}
-            />
-          )}
+          {pageIndex === 2 && <AccountsPage id={`page${pageIndex}`} />}
           {pageIndex > 2 && (
             <Page id={`page${pageIndex}`}>
               <div>{`page ${pageIndex}`}</div>

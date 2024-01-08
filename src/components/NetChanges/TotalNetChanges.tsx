@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { convertAndFormatYNABAmountToDollars } from '../../utils/utils';
-import styles from './NetChanges.module.scss'
+import styles from './NetChanges.module.scss';
 import classNames from 'classnames';
 
 type TotalNetChangesProps = Readonly<{
@@ -12,7 +12,7 @@ type TotalNetChangesProps = Readonly<{
 export function TotalNetChanges({
   accountsBalanceAtStartOfYear,
   accountsYearChange,
-  scrollProgress
+  scrollProgress,
 }: TotalNetChangesProps) {
   const totalBalanceAtStartOfYear = useMemo(
     () =>
@@ -32,8 +32,9 @@ export function TotalNetChanges({
     [accountsYearChange]
   );
 
-
-  const classes = classNames('bg-secondary', styles['total-net-changes'], {[styles['visible']]: scrollProgress >= .5});
+  const classes = classNames('bg-secondary', styles['total-net-changes'], {
+    [styles['visible']]: scrollProgress >= 0.5,
+  });
 
   return (
     <div className={classes}>

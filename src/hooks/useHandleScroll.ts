@@ -8,7 +8,7 @@ export function useHandleScroll(totalPages: number) {
   const accumulatedScrollDeltaY = useRef(0);
   const animationFrameId = useRef<number | null>(null);
 
-  const updateScrollState =useCallback( () => {
+  const updateScrollState = useCallback(() => {
     setScrollProgress(accumulatedScrollDeltaY.current / SCROLL_THRESHOLD);
 
     if (

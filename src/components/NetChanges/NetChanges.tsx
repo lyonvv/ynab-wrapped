@@ -1,9 +1,11 @@
-import { useAccountsMap, useTransactions, useTransactionsInYear, useTransactionsUpToYear } from '../../state/ynab';
+import {
+  useAccountsMap,
+  useTransactionsInYear,
+  useTransactionsUpToYear,
+} from '../../state/ynab';
 import { useMemo } from 'react';
 import * as ynab from 'ynab';
-import { getTransactionsBetweenDates } from '../../utils/utils';
 import { TotalNetChanges } from './TotalNetChanges';
-import { useSelectedYear } from '../../state/appState';
 import { Page } from '../Page';
 
 type NetChangesProps = Readonly<{
@@ -17,23 +19,25 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
   const transactionsUpToYear = useTransactionsUpToYear();
 
   const transactionsInYear = useTransactionsInYear();
-  
 
   const getAmountTotalsByAccount = (
     transactions: ynab.TransactionDetail[],
     accountsMap: Record<string, ynab.Account>
   ) =>
-    transactions.reduce((acc, transaction) => {
-      const account = accountsMap[transaction.account_id];
+    transactions.reduce(
+      (acc, transaction) => {
+        const account = accountsMap[transaction.account_id];
 
-      if (!(account.id in acc)) {
-        acc[account.id] = 0;
-      }
+        if (!(account.id in acc)) {
+          acc[account.id] = 0;
+        }
 
-      acc[account.id] += transaction.amount;
+        acc[account.id] += transaction.amount;
 
-      return acc;
-    }, {} as Record<string, number>);
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
   const accountsBalanceAtStartOfYear = useMemo(
     () => getAmountTotalsByAccount(transactionsUpToYear, accountsMap),
@@ -45,7 +49,6 @@ export function NetChanges({ id, scrollProgress }: NetChangesProps) {
 
     [accountsMap, transactionsInYear]
   );
-
 
   return (
     <Page id={id}>
