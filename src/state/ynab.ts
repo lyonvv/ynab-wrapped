@@ -1,7 +1,11 @@
 import * as ynab from 'ynab';
 import { atom, useAtomValue } from 'jotai';
 import { globalStore } from './globalStore';
-import { createRecordByField } from '../utils/utils';
+import {
+  createRecordByField,
+  getTransactionsBetweenDates,
+} from '../utils/utils';
+import { useSelectedYear } from './appState';
 
 export const budgetSummariesAtom = atom<ynab.BudgetSummary[]>([]);
 
@@ -186,4 +190,24 @@ export const useMonthSummaries = () => {
 
 export const useMonthSummariesMap = () => {
   return createRecordByField(useMonthSummaries(), 'month');
+};
+
+export const useTransactionsUpToYear = () => {
+  const year = useSelectedYear();
+
+  return getTransactionsBetweenDates(
+    useTransactions(),
+    undefined,
+    new Date(year, 0, 1)
+  );
+};
+
+export const useTransactionsInYear = () => {
+  const year = useSelectedYear();
+
+  return getTransactionsBetweenDates(
+    useTransactions(),
+    new Date(year, 0, 1),
+    new Date(year + 1, 0, 1)
+  );
 };
