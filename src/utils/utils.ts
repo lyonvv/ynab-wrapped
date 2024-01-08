@@ -83,6 +83,17 @@ export const getStartingBalanceTransactionForAccount = (
     });
 };
 
+export const getLatestTransactionForAccount = (
+  transactions: ynab.TransactionDetail[],
+  accountId: string
+) => {
+  return transactions
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .find((transaction) => {
+      return transaction.account_id === accountId;
+    });
+};
+
 export const calculateExpirationTime = (expiresInSeconds: number) => {
   const currentTime = new Date().getTime();
   return currentTime + expiresInSeconds * 1000;

@@ -211,3 +211,11 @@ export const useTransactionsInYear = () => {
     new Date(year + 1, 0, 1)
   );
 };
+
+export const useExternalTransactions = () => {
+  const transactions = useTransactions();
+
+  return transactions.filter((transaction) => {
+    return transaction.transfer_account_id === null;
+  });
+};

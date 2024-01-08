@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useAccountsMap, useTransactionsInYear } from '../../state/ynab';
 import { Page } from '../Page';
 import * as ynab from 'ynab';
+import { AccountRow } from './AccountRow';
 
 type AccountsPageProps = Readonly<{
   id: string;
@@ -9,7 +10,7 @@ type AccountsPageProps = Readonly<{
 }>;
 
 export function AccountsPage({ id, scrollProgress }: AccountsPageProps) {
-  const acconutsMap = useAccountsMap();
+  const accountsMap = useAccountsMap();
 
   const transactionsInYear = useTransactionsInYear();
 
@@ -25,22 +26,27 @@ export function AccountsPage({ id, scrollProgress }: AccountsPageProps) {
     [transactionsInYear]
   );
 
-  const accounts = useMemo(
-    () => Object.keys(transactionsGroupedByAccount).map((k) => acconutsMap[k]),
-    [acconutsMap, transactionsGroupedByAccount]
+  const accountIds = useMemo(
+    () => Object.keys(transactionsGroupedByAccount),
+    [transactionsGroupedByAccount]
   );
-
-  //how many accounts,
-  //number of transactions,
-  //net
 
   return (
     <Page id={id} scrollProgress={scrollProgress}>
-      <div>{`You used ${accounts.length} different accounts this year`}</div>
+      <div>{`You used ${accountIds.length} different accounts this year`}</div>
       <div>
-        {accounts.map((a) => (
-          <div>{JSON.stringify(a)}</div>
-        ))}
+        {[
+          ...Object.entries(transactionsGroupedByAccount)
+            .sort(([, transactionsA], [, transactionsB]) => {
+              return transactionsB.length - transactionsA.length;
+            })
+            .map(([accountId, transactions]) => (
+              <AccountRow
+                account={accountsMap[accountId]}
+                transactions={transactions}
+              />
+            )),
+        ]}
       </div>
     </Page>
   );

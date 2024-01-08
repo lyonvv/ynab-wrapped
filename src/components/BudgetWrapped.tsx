@@ -11,7 +11,6 @@ import classNames from 'classnames';
 import styles from './BudgetWrappedPageNavigator.module.scss';
 import { Page } from './Page';
 import { AccountsPage } from './Accounts/AccountsPage';
-import { Socket } from 'dgram';
 
 export function BudgetWrapped() {
   useSetAccessToken();
